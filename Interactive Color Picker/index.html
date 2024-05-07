@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Template</title>
+    <style>
+        .display{
+            width: 200px;
+            height: 200px;
+            margin: 50px 0px;
+        }
+    </style>
+  </head>
+  <body>
+    <div id="root"></div>
+  </body>
+  <script src="https://www.unpkg.com/react@18.2.0/umd/react.development.js"></script>
+  <script src="https://www.unpkg.com/react-dom@18.2.0/umd/react-dom.development.js"></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  <script type="text/babel">
+    // Your  code will go here
+
+    function InputField(){
+
+        const [Value, setValue] = React.useState("");
+        const [isValid, setIsValid] = React.useState(true);
+
+        // HANDLING TWO STATE WITH USE STATE HOOK ONE FOR GETTING INPUT VALUE AND ONE FOR CHECKING HEX VALUE
+
+        function isValidHexColor(color){
+
+            // FUNCTION FOR CHECK HEXA COLOR VALUE
+
+            if(color[0] !== "#" || color.length !== 7){
+                return false;
+            }
+
+            // HERE CHECKING IF INPUT VALUE CONTAINS # AT INDEX 0 AND WEATHER ITS LENGTH IS EQUAL TO 7 OR NOT
+
+            const validChar = "0123456789abcdefABCDEF";
+
+            // DECLARED A VARIABLE validChar
+
+            for(let i=1; i < 7; i++){
+                const char = color[i];
+
+                // RUNNING LOOP FROM 1 TO 7 ON INPUT VALUE
+
+                let valid = false
+
+                // INITILIASED A VARIABLE VALID WITH FALSE
+
+                for(let j=0; j < validChar.length; j++){
+                    if(char === validChar[j]){
+                        valid = true;
+                        break;
+                    }
+                }
+
+                // COMPARING IF INPUT VALUE IS EQUALS TO THE VALIDCHAR CHARACTERS OR NOT. IF MATCHES THEN RE-DECLARING VALID VARIABLE WITH TRUE AND BREAKS FOR LOOP.
+
+                if(!valid){
+                    return false
+                }
+
+                // IF DOES NOT MATCHES THEN RETURNS FALSE.
+                
+            }
+            return true;
+
+            // AT LAST THIS RETURNS TRUE IT MEANS THAT THE INPUT VALUE PASSED THE ALL VALIDATION CRITERIA.
+
+        }
+
+        function printValue(event){
+            const colorValue = event.target.value;
+            // GETTING VALUE FROM INPUT AND STORING IT IN colorValue VARIABLE.
+
+            setValue(colorValue)
+            // PASSING colorValue VARIABLE IN SETVALUE TO STORE VALUE TO DISPLAY BG IN DIV.
+
+            setIsValid(isValidHexColor(colorValue))
+            // PASSING INPUT VALUE IN setIsValid FOR CHECKING WEATHER IT IS A VALID HEXA OR NOT.
+        }
+
+
+        return(
+            <div>
+                <input type="text" placeholder="Enter Color" value = {Value} onChange={printValue} /> 
+                {!isValid && <div>Invalid HEX color code</div>}
+            {/* SETTING CONDITION IF ISVALID IS FALSE THEN GIVE DIC WITH TEXT - Invalid HEX color code */}
+            
+                <div className="display" style={{backgroundColor: isValid ? Value : "transparent", border: "2px solid black"}}>
+            {/* SETTING CONDITION IN STYLING IF ISVALID IS TRUE THEN PASSING VALUE (WHICH IS A VALID HEXA VALUE ELSE GIVE BG TRANSPARENT)*/}
+
+                </div>
+            </div>
+        )
+    }
+
+
+    function App(){
+        return(
+            <div>
+                <InputField/>
+            </div>
+        )
+    }
+
+    const reactDOM = ReactDOM.createRoot(document.getElementById("root")).render(<App/>)
+
+  </script>
+</html>
