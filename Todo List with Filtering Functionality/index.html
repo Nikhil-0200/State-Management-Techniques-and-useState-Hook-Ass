@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Template</title>
+  </head>
+  <body>
+    <div id="root"></div>
+  </body>
+  <script src="https://www.unpkg.com/react@18.2.0/umd/react.development.js"></script>
+  <script src="https://www.unpkg.com/react-dom@18.2.0/umd/react-dom.development.js"></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  <script type="text/babel">
+    // Your  code will go here
+
+    function App() {
+      const [todoList, setTodoList] = React.useState([]);
+      const [inputV, setInputV] = React.useState("");
+
+      function handleChange(event) {
+        setInputV(event.target.value);
+      }
+
+      function addTask() {
+        setTodoList([
+          ...todoList,
+          { id: Date.now(), task: inputV, completed: false },
+        ]);
+        setInputV("");
+      }
+
+      function handleCheckBox(id) {
+        setTodoList((prevValue) =>
+          prevValue.map((ele) =>
+            ele.id === id ? { ...ele, completed: !ele.completed } : ele
+          )
+        );
+      }
+
+      function handleDelete(id) {
+        setTodoList((prevValue) => prevValue.filter((ele) => ele.id !== id));
+      }
+
+      return (
+        <div>
+          <input
+            type="text"
+            placeholder="Add Task"
+            value={inputV}
+            onChange={handleChange}
+          />
+          <button onClick={addTask}>Add Task</button>
+
+          <br />
+          <br />
+
+          <span>
+            <ul>
+              {todoList.map((ele, index) => (
+                <li key={ele.index}>
+                  <input
+                    type="checkbox"
+                    checked={ele.completed}
+                    onChange={() => handleCheckBox(ele.id)}
+                  />
+                  <span>{ele.task}</span>
+                  <button onClick={() => handleDelete(ele.id)}>DELETE</button>
+                </li>
+              ))}
+            </ul>
+          </span>
+        </div>
+      );
+    }
+
+    const root = document.getElementById("root");
+    const reactRoot = ReactDOM.createRoot(root);
+    reactRoot.render(<App />);
+  </script>
+</html>
