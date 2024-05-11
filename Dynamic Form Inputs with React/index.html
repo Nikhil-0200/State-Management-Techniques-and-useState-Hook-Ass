@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Template</title>
+  </head>
+  <body>
+    <div id="root"></div>
+  </body>
+  <script src="https://www.unpkg.com/react@18.2.0/umd/react.development.js"></script>
+  <script src="https://www.unpkg.com/react-dom@18.2.0/umd/react-dom.development.js"></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  <script type="text/babel">
+    // Your  code will go here
+
+    function App() {
+      const [Value, setValue] = React.useState("");
+      const [hobbiesArray, setHobbiesArray] = React.useState([""]);
+
+      function handleInput(event) {
+        setValue(event.target.value);
+      }
+
+      let handleSubmit = (e) => {
+        e.preventDefault();
+        setHobbiesArray([...hobbiesArray, { id: Date.now(), data: Value }]);
+      };
+
+      let hdlSub = (event) => {
+        event.preventDefault();
+        console.log(hobbiesArray);
+      };
+
+      let handleRemove = (id) => {
+        setHobbiesArray((prevValue) =>
+          prevValue.filter((ele) => ele.id !== id)
+        );
+      };
+
+      return (
+        <form onSubmit={hdlSub}>
+          {hobbiesArray.map((ele, index) => (
+            <div key={index} id={ele.id}>
+              <input
+                type="text"
+                placeholder="Add Hobbies"
+                value={Value.id}
+                onChange={handleInput}
+              />
+              {index !== 0 && (
+                <button onClick={() => handleRemove(ele.id)}>Remove</button>
+              )}
+            </div>
+          ))}
+
+          <br />
+          <br />
+
+          <button onClick={handleSubmit}>Add Hobbies</button>
+          <button type="Submit">Submit</button>
+        </form>
+      );
+    }
+
+    let root = document.getElementById("root");
+    let reactRoot = ReactDOM.createRoot(root);
+    reactRoot.render(<App />);
+  </script>
+</html>
