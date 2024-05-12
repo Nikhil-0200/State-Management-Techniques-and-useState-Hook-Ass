@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Template</title>
+    <style>
+      * {
+        text-align: center;
+        font-family: "Poppins";
+      }
+      .options {
+        list-style-type: none;
+      }
+      .options > li {
+        background-color: aqua;
+        padding: 10px 0px;
+        margin: auto;
+        margin-top: 10px;
+        width: 40%;
+        font-size: large;
+        border-radius: 50px;
+      }
+      .scoreDiv {
+        background-color: blanchedalmond;
+        height: 200px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        width: 50%;
+        margin: auto;
+        border: 5px solid black;
+      }
+      .resetBtn {
+        background-color: red;
+        padding: 10px 20px;
+        font-size: xx-large;
+        border-radius: 50px;
+        margin-top: 50px;
+        border: 5px solid black;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="root"></div>
+  </body>
+  <script src="https://www.unpkg.com/react@18.2.0/umd/react.development.js"></script>
+  <script src="https://www.unpkg.com/react-dom@18.2.0/umd/react-dom.development.js"></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  <script type="text/babel">
+    // Your  code will go here
+
+    // DisplayScore is a component to display final score after ending quiz
+
+    let DisplayScore = ({
+      marks,
+      total,
+      setMarks,
+      setScore,
+      setDisplayQus,
+    }) => {
+      let handleReset = () => {
+        setMarks(0);
+        setScore(false);
+        setDisplayQus(0);
+      };
+
+      // handleReset function is invoked to reset quiz after clicking on Reset Button
+
+      return (
+        <div className="scoreDiv">
+          <h1>Final Score</h1>
+          <h1>
+            Correct {marks} out of 5 - ({(marks / total) * 100}%)
+          </h1>
+          <button className="resetBtn" onClick={handleReset}>
+            Reset
+          </button>
+        </div>
+      );
+    };
+
+    // Quiz component
+
+    let Quiz = () => {
+      let [score, setScore] = React.useState(false);
+      let [marks, setMarks] = React.useState(0);
+      let [displayQus, setDisplayQus] = React.useState(0);
+
+      // used useSate to maintain the state of display final score only after ending of quiz, used state to show score in final score, used state to display which question to visible on UI.
+
+      let questions = [
+        {
+          text: "What is the capital of India ?",
+          options: [
+            { text1: "Haryana", isCorrect: false },
+            { text1: "Punjab", isCorrect: false },
+            { text1: "Delhi", isCorrect: true },
+            { text1: "Jammu & Kashmir", isCorrect: false },
+          ],
+        },
+        {
+          text: "Which planet is known as the Red Planet ?",
+          options: [
+            { text1: "Venus", isCorrect: false },
+            { text1: "Mars", isCorrect: true },
+            { text1: "Jupiter", isCorrect: false },
+            { text1: "Saturn", isCorrect: false },
+          ],
+        },
+        {
+          text: "What is React ?",
+          options: [
+            { text1: "Library", isCorrect: true },
+            { text1: "Framework", isCorrect: false },
+            { text1: "Programming Language", isCorrect: false },
+            { text1: "Markup Language", isCorrect: false },
+          ],
+          correctOption: "Library",
+        },
+        {
+          text: "Which of the following is a JavaScript library for building user interfaces ?",
+          options: [
+            { text1: "React", isCorrect: true },
+            { text1: "Angular", isCorrect: false },
+            { text1: "Vue.js", isCorrect: false },
+            { text1: "jQuery", isCorrect: false },
+          ],
+        },
+        {
+          text: "What does JSX stand for in React ?",
+          options: [
+            { text1: "JavaScript XML", isCorrect: true },
+            { text1: "JavaScript Extension", isCorrect: false },
+            { text1: "JavaScript Exposition", isCorrect: false },
+            { text1: "JavaScript XQuery", isCorrect: false },
+          ],
+        },
+      ];
+
+      // Stored an questions array to display the question and option of the quiz question.
+
+      let array = questions[displayQus];
+
+      // Implemented QuestionDisplay component, to handle the logic to show question on ui based on current index, and to increase index after clicking on any of the options and have also implemented a logic to maintain marks and to show it later in final score.
+
+      let QuestionDisplay = ({ array, currentIndex }) => {
+        let handleOption = (optionText) => {
+          if (optionText.isCorrect === true) {
+            setMarks(marks + 1);
+          }
+
+          if (displayQus >= questions.length - 1) {
+            setScore(true);
+          }
+
+          setDisplayQus(displayQus + 1);
+
+          console.log(optionText.text1);
+          console.log(marks);
+        };
+
+        return (
+          <div>
+            <div>
+              <p>Question {currentIndex + 1} out of 5</p>
+              <h2 className="questionHeading">{array.text}</h2>
+
+              <ul className="options">
+                {array.options.map((text, index) => (
+                  <li onClick={() => handleOption(text)} key={index}>
+                    {text.text1}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </div>
+        );
+      };
+
+      return (
+        <div>
+          <h1>Quiz Application</h1>
+
+          {score ? (
+            <DisplayScore
+              marks={marks}
+              total={questions.length}
+              setMarks={setMarks}
+              setScore={setScore}
+              setDisplayQus={setDisplayQus}
+            />
+          ) : (
+            <QuestionDisplay array={array} currentIndex={displayQus} />
+          )}
+        </div>
+      );
+    };
+
+    let root = document.getElementById("root");
+    let reactRoot = ReactDOM.createRoot(root);
+    reactRoot.render(<Quiz />);
+  </script>
+</html>
